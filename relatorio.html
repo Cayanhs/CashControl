@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Financeiro</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+        }
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+            padding-left: 15px;
+            transition: left 0.3s ease;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -40px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .collapsed {
+            left: -250px;
+        }
+        .container {
+            margin-top: 80px;
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+            }
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.collapsed {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" id="toggleBtn">☰</button>
+        <h2>Painel</h2>
+        <a href="index.html">Home</a>
+        <a href="controle_financeiro.html">Dashboard</a>
+        <a href="relatorio.html">Relatórios</a>
+        <a href="#">Configurações</a>
+        <a href="#">Sair</a>
+    </div>
+    
+    <div class="container">
+        <h2 class="text-center">Relatório de Despesas</h2>
+        <canvas id="despesasChart"></canvas>
+        <h3>Saldo Total: <span id="total-balance">R$ 0,00</span></h3>
+    </div>
+    <script>
+    
+    </script>
+
+    <script>
+        document.getElementById("toggleBtn").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar.classList.contains("collapsed")) {
+                sidebar.classList.remove("collapsed");
+                document.body.style.marginLeft = "250px";
+            } else {
+                sidebar.classList.add("collapsed");
+                document.body.style.marginLeft = "0px";
+            }
+        });
+
+        const ctx = document.getElementById('despesasChart').getContext('2d');
+        let despesasChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Despesas Mensais (R$)',
+                    data: [],
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function atualizarGrafico(dados) {
+            despesasChart.data.labels = dados.labels;
+            despesasChart.data.datasets[0].data = dados.valores;
+            despesasChart.update();
+        }
+
+        function carregarDados() {
+            let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+            let categorias = {};
+            let saldoTotal = 0;
+
+            transacoes.forEach(transacao => {
+                if (transacao.type === "expense") {
+                    categorias[transacao.description] = (categorias[transacao.description] || 0) + parseFloat(transacao.amount);
+                }
+                saldoTotal += transacao.type === "income" ? parseFloat(transacao.amount) : -parseFloat(transacao.amount);
+            });
+
+            document.getElementById("total-balance").innerText = `R$ ${saldoTotal.toFixed(2)}`;
+            atualizarGrafico({ labels: Object.keys(categorias), valores: Object.values(categorias) });
+        }
+
+        carregarDados();
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById('despesasChart').getContext('2d');
+    let despesasChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Despesas Mensais (R$)',
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    function carregarDados() {
+        let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+        let categorias = {};
+        let saldoTotal = 0;
+
+        transacoes.forEach(transacao => {
+            if (transacao.type === "expense") {
+                categorias[transacao.description] = (categorias[transacao.description] || 0) + parseFloat(transacao.amount);
+            }
+            saldoTotal += transacao.type === "income" ? parseFloat(transacao.amount) : -parseFloat(transacao.amount);
+        });
+
+        document.getElementById("total-balance").innerText = `R$ ${saldoTotal.toFixed(2)}`;
+        atualizarGrafico({ labels: Object.keys(categorias), valores: Object.values(categorias) });
+    }
+
+    function atualizarGrafico(dados) {
+        despesasChart.data.labels = dados.labels;
+        despesasChart.data.datasets[0].data = dados.valores;
+        despesasChart.update();
+    }
+
+    carregarDados();
+});
+
+
+    </script>
+</body>
+
+</html>

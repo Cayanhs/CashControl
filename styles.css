@@ -1,0 +1,28 @@
+body {
+    background-color: #f8f9fa;
+}
+header {
+    background-color: #000000; /* Fundo preto */
+    color: #FFFFFF; /* Texto branco */
+    padding: 10px; /* Espaçamento interno */
+    position: fixed; /* Fixo no topo */
+    top: 0; /* Alinhado ao topo */
+    left: 0; /* Alinhado à esquerda */
+    right: 0; /* Alinhado à direita */
+    z-index: 1000; /* Fica acima de outros elementos */
+}
+
+header a {
+    color: #FFFFFF; /* Cor dos links */
+    margin: 0 10px; /* Margem entre os links */
+    text-decoration: none; /* Remove sublinhado */
+}
+
+header a:hover {
+    color: #BDBDBD; /* Cor dos links ao passar o mouse */
+}
+
+/* Adiciona um espaçamento ao conteúdo para não ficar atrás do cabeçalho */
+body {
+    padding-top: 60px; /* Ajuste conforme necessário */
+}

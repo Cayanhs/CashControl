@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Financeiro</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="animatio02.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            transition: margin-left 0.3s ease;
+        }
+
+        header {
+            background-color: #000000;
+            color: #FFFFFF;
+            padding: 5px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        header a {
+            color: #FFFFFF;
+            margin: 0 5px;
+            text-decoration: none;
+        }
+
+        header a:hover {
+            color: #BDBDBD;
+        }
+
+        body {
+            padding-top: 50px;
+            margin-left: 250px;
+            width: 100%;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #343a40;
+            color: white;
+            padding-top: 20px;
+            padding-left: 15px;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -40px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            transition: right 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .collapsed {
+            left: -250px;
+        }
+
+        .collapsed .toggle-btn {
+            right: -45px;
+        }
+
+        .container {
+            padding-left: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content {
+            padding-left: 30px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                left: -250px;
+            }
+
+            .sidebar.collapsed {
+                left: 0;
+            }
+
+            .toggle-btn {
+                right: 10px;
+            }
+
+            .container {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Painel Lateral -->
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" id="toggleBtn">☰</button>
+        <h2>Painel</h2>
+        <a href="index.html">Home</a>
+        <a href="controle_financeiro.html">Dashboard</a>
+        <a href="relatorio.html">Relatórios</a>
+        <a href="#">Configurações</a>
+        <a href="#">Sair</a>
+    </div>
+
+    <div class="container">
+        <h1 class="mt-5">Controle Financeiro</h1>
+        <div id="form-container" class="mb-4">
+            <input type="text" id="description" placeholder="Descrição" class="form-control mb-2">
+            <input type="number" id="amount" placeholder="Valor" class="form-control mb-2">
+            <select id="type" class="form-control mb-2">
+                <option value="income">Receita</option>
+                <option value="expense">Despesa</option>
+            </select>
+            <button id="add-transaction" class="btn btn-primary">Adicionar Transação</button>
+        </div>
+        <div class="text-center mt-4">
+            <button id="add-to-report" class="btn btn-success">Adicionar ao Relatório</button>
+        </div>
+        <h2>Transações</h2>
+        <ul id="transaction-list" class="list-group mb-4"></ul>
+        <h3>Saldo Total: <span id="total-balance">R$ 0,00</span></h3>
+        <canvas id="myChart"></canvas>
+    </div>
+    <br><br><br><br>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.getElementById("toggleBtn").addEventListener("click", function () {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.querySelector(".content");
+
+            if (sidebar.classList.contains("collapsed")) {
+                sidebar.classList.remove("collapsed");
+                document.body.style.marginLeft = "250px";
+            } else {
+                sidebar.classList.add("collapsed");
+                document.body.style.marginLeft = "0px";
+            }
+        });
+       
+    </script>
+    <script src="script.js"></script>
+    
+</body>
+
+</html>

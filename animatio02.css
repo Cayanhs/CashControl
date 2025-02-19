@@ -1,0 +1,76 @@
+* Animação do botão do painel lateral */
+.toggle-btn {
+    transition: transform 0.3s ease;
+}
+
+.toggle-btn:hover {
+    transform: scale(1.1);
+    background-color: #495057;
+}
+
+/* Animação do painel lateral */
+.sidebar {
+    transition: left 0.3s ease-in-out;
+}
+
+.collapsed {
+    left: -250px;
+}
+
+/* Suavizando a transição do conteúdo ao colapsar o menu */
+body {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* Efeito de fade-in para os itens da lista de transações */
+.list-group-item {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efeito de hover nos botões */
+.btn {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background-color: #0056b3 !important;
+}
+
+/* Animação para inputs e selects */
+input, select {
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    transform: scale(1.02);
+}
+
+/* Animação para o saldo total */
+#total-balance {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+#total-balance.positive {
+    color: green;
+    transform: scale(1.1);
+}
+
+#total-balance.negative {
+    color: red;
+    transform: scale(1.1);
+}
