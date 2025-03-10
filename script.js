@@ -2,6 +2,7 @@ const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 const transactionList = document.getElementById('transaction-list');
 const totalBalance = document.getElementById('total-balance');
 const addTransactionButton = document.getElementById('add-transaction');
+const addToReportButton = document.getElementById('add-to-report');
 let myChart; // Variável para armazenar a instância do gráfico
 
 function updateUI() {
@@ -11,7 +12,8 @@ function updateUI() {
     transactions.forEach((transaction, index) => {
         const li = document.createElement('li');
         li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `${transaction.description} - R$ ${transaction.amount.toFixed(2)} <button class="btn btn-danger btn-sm" onclick="deleteTransaction(${index})">Excluir</button>`;
+        li.innerHTML = `${transaction.description} - R$ ${transaction.amount.toFixed(2)} 
+                        <button class="btn btn-danger btn-sm" onclick="deleteTransaction(${index})">Excluir</button>`;
         transactionList.appendChild(li);
         total += transaction.type === 'income' ? transaction.amount : -transaction.amount;
     });
@@ -27,7 +29,14 @@ function addTransaction() {
     const type = document.getElementById('type').value;
 
     if (description && !isNaN(amount)) {
-        transactions.push({ description, amount, type });
+        const newTransaction = {
+            description,
+            amount,
+            type,
+            date: new Date().toLocaleDateString('pt-BR')
+        };
+
+        transactions.push(newTransaction);
         updateUI();
         document.getElementById('description').value = '';
         document.getElementById('amount').value = '';
@@ -40,15 +49,19 @@ function deleteTransaction(index) {
 }
 
 addTransactionButton.addEventListener('click', addTransaction);
-updateUI();
 
-// Função para atualizar o gráfico
+// Enviar dados para o relatório ao clicar no botão
+addToReportButton.addEventListener('click', function () {
+    localStorage.setItem('reportTransactions', JSON.stringify(transactions));
+    window.location.href = 'relatorio.html';
+});
+
+// Atualizar gráfico
 function updateChart() {
     const ctx = document.getElementById('myChart').getContext('2d');
     const labels = transactions.map(t => t.description);
     const data = transactions.map(t => t.type === 'income' ? t.amount : -t.amount);
 
-    // Se o gráfico já existir, destrua-o antes de criar um novo
     if (myChart) {
         myChart.destroy();
     }
@@ -74,3 +87,19 @@ function updateChart() {
         }
     });
 }
+
+updateUI();
+
+// Alternar o painel lateral
+document.getElementById("toggleBtn").addEventListener("click", function () {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.left = sidebar.style.left === "0px" ? "-250px" : "0px"; // Alternar a visibilidade
+
+    // Ajustar o conteúdo com base no painel
+    const contentContainer = document.getElementById("content-container");
+    if (sidebar.style.left === "0px") {
+        contentContainer.style.marginLeft = "250px"; // Se o painel estiver visível, aumenta a margem
+    } else {
+        contentContainer.style.marginLeft = "0"; // Caso contrário, a margem volta ao normal
+    }
+});

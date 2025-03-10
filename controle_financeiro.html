@@ -118,6 +118,7 @@
                 padding-left: 0;
             }
         }
+
     </style>
 </head>
 
@@ -145,34 +146,57 @@
             <button id="add-transaction" class="btn btn-primary">Adicionar Transação</button>
         </div>
         <div class="text-center mt-4">
-            <button id="add-to-report" class="btn btn-success">Adicionar ao Relatório</button>
+            <button id="add-to-report" class="btn btn-success ">Adicionar ao Relatório</button>
         </div>
         <h2>Transações</h2>
         <ul id="transaction-list" class="list-group mb-4"></ul>
         <h3>Saldo Total: <span id="total-balance">R$ 0,00</span></h3>
         <canvas id="myChart"></canvas>
     </div>
-    <br><br><br><br>
     
+    <br><br><br><br>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.getElementById("toggleBtn").addEventListener("click", function () {
-            const sidebar = document.getElementById("sidebar");
-            const content = document.querySelector(".content");
+      document.getElementById("add-transaction").addEventListener("click", function () {
+    const description = document.getElementById("description").value;
+    const amount = parseFloat(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
 
-            if (sidebar.classList.contains("collapsed")) {
-                sidebar.classList.remove("collapsed");
-                document.body.style.marginLeft = "250px";
-            } else {
-                sidebar.classList.add("collapsed");
-                document.body.style.marginLeft = "0px";
-            }
-        });
-       
+    if (description && !isNaN(amount) && amount > 0) {
+        const date = new Date();  // Obter a data atual
+        const formattedDate = date.toLocaleDateString("pt-BR"); // Data formatada
+
+        // Adicionando o mês e o ano à transação
+        const month = date.getMonth(); // Pega o mês (0 a 11)
+        const year = date.getFullYear(); // Pega o ano
+
+        const transaction = {
+            description: description,
+            amount: amount,
+            type: type,
+            date: formattedDate,
+            month: month,  // Mês da transação
+            year: year     // Ano da transação
+        };
+
+        // Adiciona a transação ao localStorage
+        const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+        transactions.push(transaction);
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        // Atualiza a UI
+        updateUI();
+
+        // Limpa os campos
+        document.getElementById("description").value = '';
+        document.getElementById("amount").value = '';
+        document.getElementById("type").value = 'income';
+    }
+});
+
     </script>
     <script src="script.js"></script>
-    
 </body>
 
 </html>
